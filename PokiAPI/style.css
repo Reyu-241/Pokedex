@@ -26,8 +26,8 @@ h1 {
 }
 
 .weaknesses {
-  margin: 6px 0 4px;
-  font-size: 12px;
+  margin: 8px 0 6px;
+  font-size: 13px;
 }
 
 .weakness-tags {
@@ -40,10 +40,11 @@ h1 {
 .weakness-tag {
   padding: 2px 7px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: bold;
   text-transform: capitalize;
   color: #fff;
+  line-height: 1.2;
 }
 
 .weakness-fire     { background: #F08030; }
@@ -112,43 +113,155 @@ h1 {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* === CARD STYLES === */
 .card {
-  border: 3px solid var(--pokemon-red);
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-align: center;
+  perspective: 1000px;
+  height: 440px;           /* Slightly taller to fit everything */
+  width: 100%;
+  max-width: 270px;
   cursor: pointer;
-  transition: all 0.2s;
+  position: relative;
 }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  border-radius: 16px;
+  background: rgb(240, 241, 241);
+  border: 3px solid #fd2828;
+}
+
+.card:hover .card-inner {
+  transform: rotateY(180deg);
   border-color: var(--pokemon-yellow);
   button.add-team {
-  background: var(--pokemon-red);
-  color: white;
-}
+  background: var(--pokemon-red);}
 }
 
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  color: #222;
+  overflow: hidden;
+}
+
+/* FRONT - Optimized for content */
+.card-front {
+  padding: 16px 14px;
+  font-size: 1em;
+}
+
+.card-front h3 {
+  margin: 8px 0 6px 0;
+  font-size: 1.35em;
+  line-height: 1.1;
+}
+
+.card-front p {
+  margin: 4px 0;
+  font-size: 0.95em;
+}
+
+.card-front small {
+  margin-top: auto;
+  font-size: 0.85em;
+  color: #9b9898;
+}
+
+/* Images */
 .card img {
-  width: 100px;
-  height: 100px;
-  image-rendering: crisp-edges;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 8px auto 12px;
+  background: #f5f4f4;
+  border-radius: 12px;
+  padding: 6px;
 }
 
+/* BACK */
+.card-back {
+  background: #f5f5f5;
+  transform: rotateY(180deg);
+  color: #111;
+  padding: 18px;
+}
+
+/* Back Stats */
+.base-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+  font-size: 0.9em;
+  margin-top: 12px;
+  background: #eeeeee;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.base-stats span {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.card-back p {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9em;
+  line-height: 1.45;
+  margin: 8px 0;
+  text-align: left;
+}
+
+/* Popup */
+#confirmModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffcc00;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 380px;
+  border: 2px solid #000000;
+}
+
+.modal-content button {
+  margin: 10px 8px;
+  padding: 10px 20px;
+  font-size: 1em;
+}
 .team {
   max-width: 1200px;
   margin: 40px auto;
-  background: linear-gradient(135deg, #f5b767, #e9653d);
+  background: linear-gradient(135deg, #f5b767, #f06e47);
   color: rgb(15, 15, 15);
   padding: 20px;
   border-radius: 12px;
