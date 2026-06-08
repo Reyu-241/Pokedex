@@ -151,7 +151,6 @@ function showAddConfirm(pokemon) {
     `;
     document.body.appendChild(modal);
   } else {
-    // Update existing modal content
     modal.querySelector('img').src = pokemon.img;
     modal.querySelector('h3').textContent = pokemon.name;
   }
@@ -261,7 +260,7 @@ function renderTeam() {
       const p = currentTeam[i];
       slot.classList.add('filled');
       slot.innerHTML = `
-        <img src="${p.img}" style="width:70px;height:70px;" alt="${p.name}">
+        <img src="${p.img}" alt="${p.name}">
         <strong>${p.name}</strong><br>
         <small>${p.region}</small><br>
         ${buildMoveDropdowns(p)}
@@ -277,6 +276,11 @@ function renderTeam() {
 function drawChart() {
   const canvas = document.getElementById('teamChart');
   if (!canvas) return;
+
+  const containerWidth = canvas.parentElement.clientWidth - 40;
+  canvas.width = Math.min(containerWidth, 800);
+  canvas.height = 300;
+
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -288,12 +292,12 @@ function drawChart() {
     return;
   }
 
-  const barWidth = 60;
-  const spacing = 95;
-  const maxHeight = 180;
+  const barWidth = Math.max(35, Math.floor((canvas.width - 100) / currentTeam.length / 1.3));
+  const spacing = (canvas.width - 80) / currentTeam.length;
+  const maxHeight = 170;
 
   currentTeam.forEach((p, i) => {
-    const x = 50 + i * spacing;
+    const x = 40 + i * spacing;
     const totalStats = p.base ? 
       (p.base.HP + p.base.Attack + p.base.Defense + 
        (p.base['Sp. Attack'] || 0) + (p.base['Sp. Defense'] || 0) + p.base.Speed) : 400;
@@ -311,17 +315,16 @@ function drawChart() {
     ctx.strokeRect(x, 240 - height, barWidth, height);
 
     ctx.fillStyle = '#141414';
-    ctx.font = 'bold 13px Arial';
+    ctx.font = `bold ${Math.min(13, barWidth/5)}px Arial`;
     ctx.textAlign = 'center';
-    ctx.fillText(p.name, x + barWidth / 2, 265);
+    ctx.fillText(p.name.substring(0, 8), x + barWidth / 2, 265);
 
-    ctx.font = '12px Arial';
+    ctx.font = '11px Arial';
     ctx.fillStyle = '#000000';
     ctx.fillText(totalStats, x + barWidth / 2, 280);
 
     ctx.fillStyle = '#0a0a0a';
-    ctx.font = '14px Arial';
-    ctx.textAlign = 'center';
+    ctx.font = '13px Arial';
     ctx.fillText(p.moves.length, x + barWidth / 2, 240 - height - 5);
   });
 }
@@ -392,6 +395,10 @@ async function init() {
   render(allPokemon);
   renderTeam();
   drawChart();
+
+  window.addEventListener('resize', () => {
+    drawChart();
+  });
 }
 
 window.onload = init;
